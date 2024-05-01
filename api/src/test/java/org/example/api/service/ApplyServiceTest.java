@@ -37,7 +37,7 @@ class ApplyServiceTest {
 
     @Test
     void 여러번_응모() throws InterruptedException {
-        int threadCount = 100;
+        int threadCount = 1000;
         ExecutorService executorService = Executors.newFixedThreadPool(32);
         CountDownLatch latch = new CountDownLatch(threadCount);
         for (int i = 1; i <= threadCount; i++) {
@@ -51,6 +51,8 @@ class ApplyServiceTest {
             });
         }
         latch.await();
+
+        Thread.sleep(10000);
 
         long count = couponRepository.count();
 
