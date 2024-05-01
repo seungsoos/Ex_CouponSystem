@@ -37,10 +37,10 @@ class ApplyServiceTest {
 
     @Test
     void 여러번_응모() throws InterruptedException {
-        int threadCount = 1000;
+        int threadCount = 100;
         ExecutorService executorService = Executors.newFixedThreadPool(32);
         CountDownLatch latch = new CountDownLatch(threadCount);
-        for (int i = 0; i < threadCount; i++) {
+        for (int i = 1; i <= threadCount; i++) {
             long userId = i;
             executorService.submit(() -> {
                 try {

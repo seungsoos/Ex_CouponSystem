@@ -3,6 +3,7 @@ package org.example.api.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.api.domain.Coupon;
+import org.example.api.producer.CouponCreateProducer;
 import org.example.api.repository.CouponCountRepository;
 import org.example.api.repository.CouponRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class ApplyService {
 
     private final CouponRepository couponRepository;
     private final CouponCountRepository couponCountRepository;
-
+    private final CouponCreateProducer couponCreateProducer;
     /**
      * 동시성 이슈 발생
      */
@@ -31,15 +32,27 @@ public class ApplyService {
     /**
      * redis incr 사용
      */
-    @Transactional
-    public void apply(Long userId) {
+//    @Transactional
+//    public void apply(Long userId) {
+//        long count = couponCountRepository.increment();
+//        log.info("count ={}", count);
+//
+//        if (count > 100) {
+//            return;
+//        }
+//        Coupon save = couponRepository.save(new Coupon(userId));
+//       log.info("coupon ={}",save.getId());
+//    }
+
+    /**
+     * Kafka 사용
+     */
+        public void apply(Long userId) {
         long count = couponCountRepository.increment();
-        log.info("count ={}", count);
 
         if (count > 100) {
             return;
         }
-        Coupon save = couponRepository.save(new Coupon(userId));
-       log.info("coupon ={}",save.getId());
+        couponCreateProducer.create(userId);
     }
 }
